@@ -26,14 +26,15 @@ export default function Hero() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
+    const c = canvas;
+    const cx = ctx; 
     let W = 0, H = 0;
     const lines: Line[] = [];
     const parts: Particle[] = [];
 
     function resize() {
-      W = canvas.width  = canvas.offsetWidth;
-      H = canvas.height = canvas.offsetHeight;
+      W = c.width  = c.offsetWidth;   // ← c instead of canvas
+      H = c.height = c.offsetHeight;
     }
     resize();
     window.addEventListener('resize', resize);
@@ -63,29 +64,29 @@ export default function Hero() {
     let raf: number;
     function draw() {
       if (!W || !H) { raf = requestAnimationFrame(draw); return; }
-      ctx.clearRect(0, 0, W, H);
+      cx.clearRect(0, 0, W, H);
 
       for (const l of lines) {
-        ctx.save();
-        ctx.translate(l.x, l.y);
-        ctx.rotate(l.ang);
-        const g = ctx.createLinearGradient(0, 0, 0, l.len);
+        cx.save();
+        cx.translate(l.x, l.y);
+        cx.rotate(l.ang);
+        const g = cx.createLinearGradient(0, 0, 0, l.len);
         g.addColorStop(0,   'rgba(201,168,76,0)');
         g.addColorStop(0.5, 'rgba(201,168,76,' + l.a.toFixed(3) + ')');
         g.addColorStop(1,   'rgba(201,168,76,0)');
-        ctx.strokeStyle = g;
-        ctx.lineWidth   = l.w;
-        ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, l.len); ctx.stroke();
-        ctx.restore();
+        cx.strokeStyle = g;
+        cx.lineWidth   = l.w;
+        cx.beginPath(); cx.moveTo(0, 0); cx.lineTo(0, l.len); cx.stroke();
+        cx.restore();
         l.y += l.spd;
         if (l.y > H + 60) { l.y = -60; l.x = Math.random() * 1.6 * W; }
       }
 
       for (const p of parts) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(201,168,76,' + p.a.toFixed(3) + ')';
-        ctx.fill();
+        cx.beginPath();
+        cx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        cx.fillStyle = 'rgba(201,168,76,' + p.a.toFixed(3) + ')';
+        cx.fill();
         p.x += p.dx; p.y += p.dy;
         if (p.x < 0 || p.x > W) p.dx *= -1;
         if (p.y < 0 || p.y > H) p.dy *= -1;
@@ -155,6 +156,7 @@ export default function Hero() {
 
     const fencer = document.getElementById('hero-fencer');
     if (!fencer) return;
+    const f = fencer;
 
     let travelST: ScrollTrigger | null = null;
     let resizeTimer: ReturnType<typeof setTimeout>;
@@ -169,14 +171,14 @@ export default function Hero() {
 
     /* Reset fencer to its hero starting position (fixed, right side) */
     function resetToFixed() {
-      fencer.style.height   = getFencerHeight();
-      fencer.style.position = 'fixed';
-      fencer.style.right    = '5%';
-      fencer.style.left     = 'auto';
-      fencer.style.top      = '50%';
-      fencer.style.bottom   = 'auto';
-      fencer.style.display  = 'block';
-      gsap.set(fencer, { x: 0, y: 0, yPercent: -50, scaleX: 1, opacity: 1 });
+      f.style.height   = getFencerHeight();
+      f.style.position = 'fixed';
+      f.style.right    = '5%';
+      f.style.left     = 'auto';
+      f.style.top      = '50%';
+      f.style.bottom   = 'auto';
+      f.style.display  = 'block';
+      gsap.set(f, { x: 0, y: 0, yPercent: -50, scaleX: 1, opacity: 1 });
     }
 
     /* Switch fencer to absolute inside #fence-wrap so it pins in About */
@@ -194,19 +196,19 @@ export default function Hero() {
       const docCentreY = targetRect.top  + targetRect.height / 2 + scrollY;
 
       // Fencer dimensions
-      const fW = fencer.offsetWidth;
-      const fH = fencer.offsetHeight;
+      const fW = f.offsetWidth;
+      const fH = f.offsetHeight;
 
       // Position relative to wrap
       const relLeft = docCentreX - wrapRect.left - window.scrollX - fW / 2;
       const relTop  = docCentreY - (wrapRect.top + scrollY)        - fH / 2;
 
-      fencer.style.position = 'absolute';
-      fencer.style.left     = relLeft + 'px';
-      fencer.style.top      = relTop  + 'px';
-      fencer.style.right    = 'auto';
-      fencer.style.bottom   = 'auto';
-      gsap.set(fencer, { x: 0, y: 0, yPercent: 0, scaleX: -1 });
+      f.style.position = 'absolute';
+      f.style.left     = relLeft + 'px';
+      f.style.top      = relTop  + 'px';
+      f.style.right    = 'auto';
+      f.style.bottom   = 'auto';
+      gsap.set(f, { x: 0, y: 0, yPercent: 0, scaleX: -1 });
     }
 
     function buildTriggers() {
@@ -214,7 +216,7 @@ export default function Hero() {
       travelST = null;
 
       if (isMobile()) {
-        fencer.style.display = 'none';
+        f.style.display = 'none';
         return;
       }
 
@@ -227,7 +229,7 @@ export default function Hero() {
       requestAnimationFrame(() => {
         const aboutRect  = aboutSection.getBoundingClientRect();
         const targetRect = visTarget.getBoundingClientRect();
-        const fencerRect = fencer.getBoundingClientRect();
+        const fencerRect = f.getBoundingClientRect();
 
         // Delta to land fencer centre on target centre (in fixed/viewport space)
         const deltaX = (targetRect.left + targetRect.width  / 2) - (fencerRect.left + fencerRect.width  / 2);
@@ -271,7 +273,7 @@ export default function Hero() {
         travelST?.kill();
         travelST = null;
         if (isMobile()) {
-          fencer.style.display = 'none';
+          f.style.display = 'none';
         } else {
           buildTriggers();
         }
