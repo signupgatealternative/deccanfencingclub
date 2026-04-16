@@ -4,25 +4,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 
-/* ─── Countdown helper ─── */
-/* function useCountdown(target: Date) {
-  const [t, setT] = useState({ d: 0, h: 0, m: 0, s: 0 });
-  useEffect(() => {
-    function tick() {
-      const diff = Math.max(0, target.getTime() - Date.now());
-      setT({
-        d: Math.floor(diff / 86400000),
-        h: Math.floor((diff % 86400000) / 3600000),
-        m: Math.floor((diff % 3600000) / 60000),
-        s: Math.floor((diff % 60000) / 1000),
-      });
-    }
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, [target]);
-  return t;
-} */
 
   function useCountdown(target: Date) {
   const [t, setT] = useState({ d: 0, h: 0, m: 0, s: 0 });
@@ -184,6 +165,18 @@ const DEADLINE = useMemo(
   });
 
   const formRef = useRef<HTMLElement>(null);
+  const [qr, setQr] = useState('');
+const [upiLink, setUpiLink] = useState('');
+const [error, setError] = useState('');
+
+const [paymentDone, setPaymentDone] = useState(false);
+const [paymentLoading, setPaymentLoading] = useState(false);
+const [paymentError, setPaymentError] = useState('');
+const [paymentForm, setPaymentForm] = useState({
+  transactionId: '',
+  paymentFile: null as File | null,
+});
+
 
   function pad(n: number) { return String(n).padStart(2, '0'); }
 
@@ -192,14 +185,64 @@ const DEADLINE = useMemo(
       setForm(f => ({ ...f, [k]: e.target.value }));
   }
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    await new Promise(r => setTimeout(r, 1200));
-    setLoading(false);
+async function submit(e: React.FormEvent) {
+  e.preventDefault();
+  setLoading(true);
+  setError('');
+
+  try {
+    const fd = new FormData();
+
+    // Basic fields
+    fd.append('name', form.name);
+    fd.append('parentName', form.parentName);
+    fd.append('email', form.email);
+    fd.append('phone', form.phone);
+    fd.append('dob', form.dob);
+    fd.append('category', form.category);
+    fd.append('weapon', form.weapon);
+    fd.append('club', form.club);
+    fd.append('tshirt', form.tshirt);
+    fd.append('notes', form.notes);
+
+    // Address
+    fd.append('street1', form.street1);
+    fd.append('street2', form.street2);
+    fd.append('city', form.city);
+    fd.append('state', form.state);
+    fd.append('pin', form.pin);
+    fd.append('country', form.country);
+
+    // Files
+    if (form.aadhaarFile) {
+      fd.append('aadhaarFile', form.aadhaarFile);
+    }
+
+    const res = await fetch('/api/eventregister', {
+      method: 'POST',
+      body: fd,
+    });
+
+    const data = await res.json();
+
+    if (!data.success) throw new Error('Failed');
+
+    setQr(data.qr);
+    setUpiLink(data.upiLink);
     setSubmitted(true);
-    window.scrollTo({ top: formRef.current?.offsetTop ?? 0, behavior: 'smooth' });
+
+    window.scrollTo({
+      top: formRef.current?.offsetTop ?? 0,
+      behavior: 'smooth',
+    });
+
+  } catch (err) {
+    console.error(err);
+    setError('Something went wrong. Please try again.');
+  } finally {
+    setLoading(false);
   }
+}
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
@@ -226,6 +269,40 @@ const DEADLINE = useMemo(
   };
 
   const fieldStyle: React.CSSProperties = { marginBottom: '1.5rem' };
+
+
+  const UPI_ID = "7671066509@hdfc";
+  const NAME = "Deccan Fencing Club";
+  const AMOUNT = 1000;
+
+  const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(NAME)}&am=${AMOUNT}&cu=INR`;
+
+  
+  async function submitPayment() {
+  if (!paymentForm.transactionId.trim()) return;
+  setPaymentLoading(true);
+  setPaymentError('');
+  try {
+    const fd = new FormData();
+    fd.append('name', form.name);
+    fd.append('email', form.email);
+    fd.append('phone', form.phone);
+    fd.append('category', form.category);
+    fd.append('weapon', form.weapon);
+    fd.append('transactionId', paymentForm.transactionId);
+    if (paymentForm.paymentFile) fd.append('paymentFile', paymentForm.paymentFile);
+
+    const res = await fetch('/api/eventregister/confirm-payment', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (!data.success) throw new Error('Failed');
+    setPaymentDone(true);
+    window.scrollTo({ top: formRef.current?.offsetTop ?? 0, behavior: 'smooth' });
+  } catch {
+    setPaymentError('Something went wrong. Please try again.');
+  } finally {
+    setPaymentLoading(false);
+  }
+}
 
   /* ──────────── JSX ──────────── */
   return (
@@ -321,6 +398,7 @@ const DEADLINE = useMemo(
           <div style={{ display: 'flex', gap: 'clamp(0.5rem,3vw,1.5rem)', marginTop: '2.5rem', position: 'relative', zIndex: 2 }}>
             {[['DAYS', cd.d], ['HRS', cd.h], ['MIN', cd.m], ['SEC', cd.s]].map(([label, val]) => {
   const isSec = label === 'SEC';
+
 
   return (
     <div
@@ -447,78 +525,7 @@ const DEADLINE = useMemo(
           </p>
         </section>
 
-        {/* ── EQUIPMENT ── */}
-        {/* <section style={{ padding: 'clamp(3rem,8vw,6rem) clamp(1.2rem,6vw,4rem)', background: 'rgba(255,255,255,.015)' }}>
-          <Diamonds />
-          <SectionTitle>Equipment</SectionTitle>
-
-          <GoldTable>
-            <thead>
-              <tr>
-                <Th>Category</Th>
-                <Th>Blade Size</Th>
-                <Th>Equipment Standard</Th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['Open, Senior, U19, U16, U14', 'Size 5', 'Masks, Jackets, Breeches, Under-Plastrons and Gloves intact — EN13567:2002, 350N penetration resistance'],
-                ['U12', 'Size 0–3', ''],
-                ['U10, U8', 'Size 0', ''],
-              ].map(([cat, blade, equip], i) => (
-                <tr key={i} style={{ background: i % 2 === 0 ? 'rgba(255,255,255,.02)' : 'rgba(0,0,0,.15)' }}>
-                  <TdBold>{cat}</TdBold>
-                  <Td style={{ textAlign: 'center' }}>{blade}</Td>
-                  <Td style={{ fontSize: '0.88rem', color: 'rgba(245,240,232,.72)' }}>{equip}</Td>
-                </tr>
-              ))}
-            </tbody>
-          </GoldTable>
-
-          <ul style={{ listStyle: 'none', padding: 0, margin: '2.5rem auto 0', maxWidth: 760 }}>
-            <BulletRow>Fencers must present their mask and fencing uniform to the weapon control counter for checking. Only stamped equipment may be used.</BulletRow>
-            <BulletRow>In case of any dispute, the decision of the chief referee will be final.</BulletRow>
-            <BulletRow><strong>Chest protector:</strong> all fencers must wear a chest protector.</BulletRow>
-            <BulletRow><strong>Hair:</strong> long hair must be tied up and placed inside the clothing and/or mask. A yellow card will be given otherwise.</BulletRow>
-          </ul>
-        </section> */}
-
-        {/* ── ENTRY FEES ── */}
-       {/* <section style={{ padding: 'clamp(3rem,8vw,6rem) clamp(1.2rem,6vw,4rem)' }}>
-  <Diamonds />
-  <SectionTitle>Entry Fees</SectionTitle>
-
-  <div style={{ maxWidth: 760, margin: '0 auto' }}>
-    <GoldTable>
-      <thead>
-        <tr>
-          <Th>Registration Window</Th>
-          <Th style={{ textAlign: 'center' }}>Individual</Th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr style={{ background: 'rgba(255,255,255,.02)' }}>
-          <Td>
-            <strong style={{ color: '#C9A84C' }}>Online Entry</strong><br />
-            <span style={{ fontSize: '0.82rem', color: 'rgba(245,240,232,.5)' }}>
-              Before 28 May 2026
-            </span>
-          </Td>
-          <Td style={{ textAlign: 'center', fontFamily: "'Cinzel Decorative', serif", color: '#C9A84C', fontSize: '1.3rem' }}>
-            ₹ 1,000
-          </Td>
-        </tr>
-      </tbody>
-    </GoldTable>
-
-    <ul style={{ listStyle: 'none', padding: 0, marginTop: '2rem' }}>
-      <BulletRow><strong>Registration deadline:</strong> 28 May 2026, 23:59 IST, or until full capacity is reached.</BulletRow>
-      <BulletRow><strong>Acceptance of rules:</strong> By submitting your registration, you confirm you have read and agreed to the competition rules.</BulletRow>
-      <BulletRow><strong>Fees and confirmation:</strong> Registration fees are <strong>non-refundable</strong> and <strong>non-transferable</strong>. A confirmation email will be issued upon registration.</BulletRow>
-      <BulletRow><strong>Schedule conflicts:</strong> If you register for multiple events and there is a timetable conflict after the final schedule is released on <strong>25 May 2026</strong>, you must choose which event to participate in. One conflicting event may be refunded in full.</BulletRow>
-    </ul>
-  </div>
-</section> */}
+      
 <section style={{ padding: 'clamp(3rem,8vw,6rem) clamp(1.2rem,6vw,4rem)' }}>
   <Diamonds />
   <SectionTitle>Entry Fees</SectionTitle>
@@ -657,31 +664,237 @@ const DEADLINE = useMemo(
           <Diamonds />
           <SectionTitle>Register for the Event</SectionTitle>
 
-          {submitted ? (
-            /* ── SUCCESS STATE ── */
-            <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center', padding: '4rem 2rem' }}>
-              <div style={{
-                width: 80, height: 80, borderRadius: '50%',
-                border: '2px solid #C9A84C',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                margin: '0 auto 2rem',
-                fontSize: '2rem',
-                color: '#C9A84C',
-              }}>✓</div>
-              <h3 style={{ fontFamily: "'Cinzel Decorative', serif", fontSize: '1.8rem', marginBottom: '1rem' }}>
-                Registration Received!
-              </h3>
-              <p style={{ fontFamily: "'Crimson Pro', serif", fontSize: '1.05rem', color: 'rgba(245,240,232,.7)', lineHeight: 1.8 }}>
-                Thank you for registering for <strong>Deccan Open Fencing 2026</strong>. A confirmation email will be sent to <strong>{form.email}</strong> shortly with payment details.
-              </p>
-              <div style={{ marginTop: '2rem', background: 'rgba(201,168,76,.08)', border: '1px solid rgba(201,168,76,.25)', padding: '1.5rem' }}>
-                <p style={{ fontFamily: "'Cinzel', serif", fontSize: '0.58rem', letterSpacing: '0.2em', color: '#C9A84C', marginBottom: '0.5rem' }}>REGISTRATION FEE DUE</p>
-                <p style={{ fontFamily: "'Cinzel Decorative', serif", fontSize: '2rem', color: '#F5F0E8' }}>₹ 1,000</p>
-                <p style={{ fontFamily: "'Crimson Pro', serif", fontSize: '0.88rem', color: 'rgba(245,240,232,.5)', marginTop: '0.3rem' }}>Online payment — details in your confirmation email</p>
+         {submitted ? (
+  <div style={{ maxWidth: 600, margin: '0 auto', padding: '2rem 1rem' }}>
+ 
+    {/* ── Step indicator ── */}
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0', marginBottom: '3rem' }}>
+      {/* Step 1 - Done */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+        <div style={{
+          width: 40, height: 40, borderRadius: '50%',
+          background: '#C9A84C', color: '#07080A',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: '1rem',
+        }}>✓</div>
+        <span style={{ fontFamily: "'Cinzel', serif", fontSize: '0.48rem', letterSpacing: '0.15em', color: '#C9A84C' }}>REGISTERED</span>
+      </div>
+ 
+      {/* Connector */}
+      <div style={{ width: 80, height: 1, background: '#C9A84C', margin: '0 0 1.2rem' }} />
+ 
+      {/* Step 2 - Active */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+        <div style={{
+          width: 40, height: 40, borderRadius: '50%',
+          border: '2px solid #C9A84C', color: '#C9A84C',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: '1rem',
+          background: 'rgba(201,168,76,.1)',
+        }}>2</div>
+        <span style={{ fontFamily: "'Cinzel', serif", fontSize: '0.48rem', letterSpacing: '0.15em', color: '#C9A84C' }}>PAY & CONFIRM</span>
+      </div>
+ 
+      {/* Connector */}
+      <div style={{ width: 80, height: 1, background: 'rgba(201,168,76,.25)', margin: '0 0 1.2rem' }} />
+ 
+      {/* Step 3 - Pending */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+        <div style={{
+          width: 40, height: 40, borderRadius: '50%',
+          border: '2px solid rgba(201,168,76,.3)', color: 'rgba(245,240,232,.3)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: '1rem',
+        }}>3</div>
+        <span style={{ fontFamily: "'Cinzel', serif", fontSize: '0.48rem', letterSpacing: '0.15em', color: 'rgba(201,168,76,.4)' }}>VERIFIED</span>
+      </div>
+    </div>
+ 
+    {/* ── QR Payment block ── */}
+    {!paymentDone ? (
+      <>
+        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+          <p style={{
+            fontFamily: "'Cinzel', serif", fontSize: '0.6rem', letterSpacing: '0.25em',
+            color: '#C9A84C', marginBottom: '1rem',
+          }}>SCAN TO PAY ₹1,000</p>
+ 
+          {qr && (
+            <img
+              src={qr} alt="UPI QR Code"
+              style={{
+                width: 200, height: 200,
+                border: '2px solid rgba(201,168,76,.4)',
+                padding: '0.5rem',
+                background: '#fff',
+                display: 'block',
+                margin: '0 auto 1.2rem',
+              }}
+            />
+          )}
+ 
+          <p style={{
+            fontFamily: "'Cinzel', serif", fontSize: '0.55rem', letterSpacing: '0.2em',
+            color: 'rgba(245,240,232,.5)', marginBottom: '0.4rem',
+          }}>UPI ID</p>
+          <p style={{
+            fontFamily: "'Crimson Pro', serif", fontSize: '1.1rem',
+            color: '#F5F0E8', marginBottom: '1rem',
+            background: 'rgba(201,168,76,.08)', padding: '0.5rem 1rem',
+            border: '1px solid rgba(201,168,76,.2)', display: 'inline-block',
+          }}>7671066509@hdfc</p>
+ 
+          <br />
+          <a
+            href={upiLink}
+            style={{
+              display: 'inline-block',
+              background: 'rgba(201,168,76,.12)',
+              border: '1px solid rgba(201,168,76,.4)',
+              color: '#C9A84C',
+              fontFamily: "'Cinzel', serif",
+              fontSize: '0.55rem',
+              letterSpacing: '0.2em',
+              padding: '0.7rem 1.5rem',
+              textDecoration: 'none',
+              marginTop: '0.5rem',
+            }}
+          >
+            OPEN UPI APP ↗
+          </a>
+        </div>
+ 
+        {/* ── Payment confirmation form ── */}
+        <div style={{
+          border: '1px solid rgba(201,168,76,.2)',
+          background: 'rgba(201,168,76,.04)',
+          padding: '2rem',
+        }}>
+          <p style={{
+            fontFamily: "'Cinzel', serif", fontSize: '0.6rem', letterSpacing: '0.22em',
+            color: '#C9A84C', marginBottom: '1.5rem', textAlign: 'center',
+          }}>
+            AFTER PAYMENT — ENTER DETAILS BELOW
+          </p>
+ 
+          {/* Transaction ID */}
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={labelStyle}>UPI Transaction / UTR ID *</label>
+            <input
+              type="text"
+              required
+              value={paymentForm.transactionId}
+              onChange={e => setPaymentForm(p => ({ ...p, transactionId: e.target.value }))}
+              placeholder="e.g. 407812345678"
+              style={inputStyle}
+              onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,.7)'}
+              onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,.22)'}
+            />
+            <p style={{ fontFamily: "'Crimson Pro', serif", fontSize: '0.78rem', color: 'rgba(245,240,232,.35)', marginTop: '0.4rem' }}>
+              Find this in your UPI app under transaction history
+            </p>
+          </div>
+ 
+          {/* Screenshot upload */}
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={labelStyle}>Payment Screenshot <span style={{ color: 'rgba(245,240,232,.35)' }}>(optional but recommended)</span></label>
+            <label
+              htmlFor="payment-upload"
+              style={{
+                display: 'flex', alignItems: 'center', gap: '1rem',
+                border: '1px dashed rgba(201,168,76,.35)',
+                padding: '1rem 1.2rem',
+                cursor: 'pointer',
+                background: 'rgba(201,168,76,.03)',
+              }}
+            >
+              <span style={{ fontSize: '1.4rem', color: '#C9A84C' }}>⬆</span>
+              <div>
+                <p style={{ fontFamily: "'Cinzel', serif", fontSize: '0.55rem', letterSpacing: '0.15em', color: '#C9A84C', marginBottom: '0.2rem' }}>
+                  {paymentForm.paymentFile ? paymentForm.paymentFile.name : 'CLICK TO UPLOAD'}
+                </p>
+                <p style={{ fontFamily: "'Crimson Pro', serif", fontSize: '0.78rem', color: 'rgba(245,240,232,.4)' }}>
+                  {paymentForm.paymentFile
+                    ? `${(paymentForm.paymentFile.size / 1024).toFixed(0)} KB`
+                    : 'JPG or PNG · max 5 MB'}
+                </p>
               </div>
-            </div>
-          ) : (
+              {paymentForm.paymentFile && (
+                <span style={{ marginLeft: 'auto', color: '#C9A84C', fontSize: '1.1rem' }}>✓</span>
+              )}
+            </label>
+            <input
+              id="payment-upload"
+              type="file"
+              accept=".jpg,.jpeg,.png,.webp"
+              style={{ display: 'none' }}
+              onChange={e => {
+                const file = e.target.files?.[0] ?? null;
+                setPaymentForm(p => ({ ...p, paymentFile: file }));
+              }}
+            />
+          </div>
+ 
+          {paymentError && (
+            <p style={{ color: '#ff6b6b', fontFamily: "'Crimson Pro', serif", textAlign: 'center', marginBottom: '1rem' }}>
+              {paymentError}
+            </p>
+          )}
+ 
+          <button
+            onClick={submitPayment}
+            disabled={paymentLoading || !paymentForm.transactionId.trim()}
+            style={{
+              width: '100%',
+              background: (paymentLoading || !paymentForm.transactionId.trim()) ? 'rgba(201,168,76,.4)' : '#C9A84C',
+              color: '#07080A',
+              border: 'none',
+              fontFamily: "'Cinzel', serif",
+              fontSize: '0.65rem',
+              fontWeight: 700,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              padding: '1.1rem',
+              cursor: (paymentLoading || !paymentForm.transactionId.trim()) ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {paymentLoading ? 'Submitting…' : '✓ Confirm Payment'}
+          </button>
+        </div>
+      </>
+    ) : (
+      /* ── All done ── */
+      <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+        <div style={{
+          width: 80, height: 80, borderRadius: '50%',
+          border: '2px solid #C9A84C',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          margin: '0 auto 2rem',
+          fontSize: '2.2rem', color: '#C9A84C',
+        }}>✓</div>
+ 
+        <h3 style={{ fontFamily: "'Cinzel Decorative', serif", fontSize: '1.6rem', marginBottom: '1rem', color: '#F5F0E8' }}>
+          All Done!
+        </h3>
+        <p style={{
+          fontFamily: "'Crimson Pro', serif", fontSize: '1.05rem',
+          color: 'rgba(245,240,232,.7)', lineHeight: 1.8,
+        }}>
+          Your payment details have been submitted.<br />
+          We will verify and send a final confirmation to your email.
+        </p>
+        <p style={{
+          fontFamily: "'Cinzel', serif", fontSize: '0.55rem', letterSpacing: '0.2em',
+          color: '#C9A84C', marginTop: '2rem',
+        }}>
+          ⚔ DECCAN FENCING CLUB · HYDERABAD
+        </p>
+      </div>
+    )}
+  </div>
+) : (
             /* ── FORM ── */
+            
             <form
               onSubmit={submit}
               style={{
@@ -984,6 +1197,18 @@ const DEADLINE = useMemo(
                   I confirm that I have read and agree to the competition rules, terms, and arrangements set by Deccan Fencing Club. I understand that registration fees are non-refundable and non-transferable.
                 </label>
               </div>
+              {error && (
+                <p
+                  style={{
+                    color: '#ff6b6b',
+                    marginBottom: '1rem',
+                    textAlign: 'center',
+                    fontFamily: "'Crimson Pro', serif",
+                  }}
+                >
+                  {error}
+                </p>
+              )}
 
               {/* Submit */}
               <button
