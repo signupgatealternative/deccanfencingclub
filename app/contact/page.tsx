@@ -121,23 +121,35 @@ export default function Contact() {
               {
                 icon: '📍',
                 title: 'Location',
-                content: 'Hyderabad, India',
+                content: 'The Peak Pride, 602, D.No 257/91/134/1, beside Walking Street Drive in, Madhapur, Hyderabad, Telangana 500081',
               },
               {
                 icon: '📧',
                 title: 'Email',
-                content: 'info@deccanfencingclub.com',
+                content: 'deccanfencingclub@gmail.com',
               },
               {
                 icon: '📱',
                 title: 'Phone',
-                content: '+91 XXXX-XXX-XXX',
+                content: '+91 89858 67456',
               },
               {
-                icon: '⏰',
-                title: 'Hours',
-                content: 'Mon - Sat: 4:00 PM - 9:00 PM',
-              },
+  icon: '⏰',
+  title: 'Hours',
+  content: (
+    <div style={{ lineHeight: '1.6' }}>
+      <p style={{ margin: 0 }}>
+        <strong>Mon – Sun</strong>
+      </p>
+      <p style={{ margin: 0, color: '#C9A84C' }}>
+        Morning: 6:00 AM – 8:00 AM
+      </p>
+      <p style={{ margin: 0, color: '#C9A84C' }}>
+        Evening: 4:00 PM – 8:00 PM
+      </p>
+    </div>
+  ),
+}
             ].map((info, idx) => (
               <div
                 key={idx}
@@ -430,6 +442,48 @@ export default function Contact() {
             </form>
           )}
         </div>
+
+        <section
+  style={{
+    padding: '4rem 4rem',
+    borderTop: '1px solid rgba(187, 36, 35, 0.2)',
+  }}
+>
+  <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    
+    <h2
+      style={{
+        fontFamily: "'Cinzel Decorative', serif",
+        fontSize: '2rem',
+        fontWeight: 700,
+        color: '#C9A84C',
+        marginBottom: '2rem',
+        textAlign: 'center',
+      }}
+    >
+      Find Us Here
+    </h2>
+
+ <div
+  style={{
+    width: '100%',
+    height: '450px',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    border: '1px solid rgba(187, 36, 35, 0.2)',
+  }}
+>
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.037779498541!2d78.38224937585656!3d17.457905783441387!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb91744584c87b%3A0xe3e3843663f3608c!2sDeccan%20Fencing%20Club!5e0!3m2!1sen!2sin!4v1776318265610!5m2!1sen!2sin"
+    style={{ width: '100%', height: '100%', border: 0 }}
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="no-referrer-when-downgrade"
+  />
+</div>
+
+  </div>
+</section>
       </section>
 
     

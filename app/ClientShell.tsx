@@ -4,6 +4,7 @@ import CursorController from "../components/CursorController"
 import Footer from "../components/Footer"
 import ProgressBar from "../components/ProgressBar"
 import Navigation from "../components/Navigation"
+import Whatsapp from "@/components/Whatsapp"
 
 
 export default function ClientShell({
@@ -31,6 +32,7 @@ export default function ClientShell({
 
       {/* Footer */}
       <Footer />
+      <Whatsapp />
     </>
   )
 }

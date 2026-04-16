@@ -276,7 +276,7 @@ export default function AboutUs() {
             Whether you&apos;re a beginner or an experienced fencer, there&apos;s a place for you in our growing family. Join us and become part of a vibrant community that celebrates the art, discipline, and joy of fencing.
           </p>
           <a
-            href="#register"
+            href="/contact"
             style={{
               fontFamily: "'Cinzel', serif",
               fontSize: '0.8rem',

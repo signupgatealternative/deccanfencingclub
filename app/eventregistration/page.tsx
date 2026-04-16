@@ -172,9 +172,15 @@ const DEADLINE = useMemo(
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading]     = useState(false);
   const [form, setForm] = useState({
-    name: '', email: '', phone: '', dob: '',
-    category: '', weapon: '', club: '',
-    tshirt: '', team: '', notes: '',
+   name: '', parentName: '',        // ← parentName added
+  email: '', phone: '', dob: '',
+  category: '', weapon: '',
+  club: '', tshirt: '', notes: '',
+  // address
+  street1: '', street2: '',
+  city: '', state: '', pin: '', country: 'India',
+  // doc
+  aadhaarFile: null as File | null,
   });
 
   const formRef = useRef<HTMLElement>(null);
@@ -373,7 +379,7 @@ const DEADLINE = useMemo(
             color: '#F5F0E8',
           }}>
             ⚠ Registration closes&nbsp;
-            <span style={{ color: '#C9A84C', fontWeight: 700 }}>28 May 2026</span>
+            <span style={{ color: '#C9A84C', fontWeight: 700 }}>6 June 2026</span>
             &nbsp;— {dl.d}d {pad(dl.h)}h {pad(dl.m)}m remaining
           </div>
 
@@ -413,14 +419,14 @@ const DEADLINE = useMemo(
             </thead>
             <tbody>
               {[
-                ['Open',         'Born in or before 2008'],
-                ['Senior Team',  'Born in or before 2008'],
-                ['U19',          'Born in or after 2007'],
-                ['U16',          'Born in or after 2010'],
-                ['U14',          'Born in or after 2012'],
-                ['U12',          'Born in or after 2014'],
                 ['U10',          'Born in or after 2016'],
-                ['U8',           'Born in or after 2018'],
+                ['U12',          'Born in or after 2014'],
+                ['U14',          'Born in or after 2012'],
+                ['U16',          'Born in or after 2010'],
+                
+                
+                
+                
               ].map(([cat, age], i) => (
                 <tr key={i} style={{ background: i % 2 === 0 ? 'rgba(255,255,255,.02)' : 'rgba(0,0,0,.15)' }}>
                   <TdBold>{cat}</TdBold>
@@ -530,18 +536,29 @@ const DEADLINE = useMemo(
           <Td>
             <strong style={{ color: '#C9A84C' }}>Online Entry</strong><br />
             <span style={{ fontSize: '0.82rem', color: 'rgba(245,240,232,.5)' }}>
-              Before 28 May 2026
+              Before 6 June 2026
             </span>
           </Td>
           <Td style={{ textAlign: 'center', fontFamily: "'Cinzel Decorative', serif", color: '#C9A84C', fontSize: '1.3rem' }}>
             ₹ 1,000
           </Td>
         </tr>
+        <tr style={{ background: 'rgba(255,255,255,.02)' }}>
+          <Td>
+            <strong style={{ color: '#C9A84C' }}>AT VENUE</strong><br />
+            <span style={{ fontSize: '0.82rem', color: 'rgba(245,240,232,.5)' }}>
+              on 6 June 2026
+            </span>
+          </Td>
+          <Td style={{ textAlign: 'center', fontFamily: "'Cinzel Decorative', serif", color: '#C9A84C', fontSize: '1.3rem' }}>
+            ₹ 1,500
+          </Td>
+        </tr>
       </tbody>
     </GoldTable>
 
     <ul style={{ listStyle: 'none', padding: 0, marginTop: '2rem' }}>
-      <BulletRow><strong>Registration deadline:</strong> 28 May 2026, 23:59 IST, or until full capacity is reached.</BulletRow>
+      <BulletRow><strong>Registration deadline:</strong> 6 June 2026, 23:59 IST, or until full capacity is reached.</BulletRow>
       <BulletRow><strong>Acceptance of rules:</strong> By submitting your registration, you confirm you have read and agreed to the competition rules.</BulletRow>
       <BulletRow><strong>Fees and confirmation:</strong> Registration fees are <strong>non-refundable</strong> and <strong>non-transferable</strong>. A confirmation email will be issued upon registration.</BulletRow>
       <BulletRow><strong>Schedule conflicts:</strong> If you register for multiple events and there is a timetable conflict after the final schedule is released on <strong>25 May 2026</strong>, you must choose which event to participate in. One conflicting event may be refunded in full.</BulletRow>
@@ -570,8 +587,8 @@ const DEADLINE = useMemo(
               </thead>
               <tbody>
                 {[
-                  ['U14, U16, U19, Senior, Open', '5 points / 3 mins', '15 points / 3 periods of 3 mins / 1 min break and 1 min break at 8th point for Sabre'],
-                  ['U8, U10, U12', '5 points / 3 mins', '10 points / 2 periods of 3 mins / 1 min break and 1 min break at 5th point for Sabre'],
+                  ['U14, U16', '5 points / 3 mins', '15 points / 3 periods of 3 mins / 1 min break and 1 min break at 8th point for Sabre'],
+                  ['U10, U12', '5 points / 3 mins', '10 points / 2 periods of 3 mins / 1 min break and 1 min break at 5th point for Sabre'],
                 ].map(([cat, p, de], i) => (
                   <tr key={i} style={{ background: i % 2 === 0 ? 'rgba(255,255,255,.02)' : 'rgba(0,0,0,.15)' }}>
                     <TdBold>{cat}</TdBold>
@@ -591,7 +608,7 @@ const DEADLINE = useMemo(
                   <li>17 fencers or more: 20%–30% elimination in the bout</li>
                 </ul>
               </BulletRow>
-              <BulletRow><strong>Team Events:</strong> Each team consists of 3–4 fencers. Rankings determined by the sum of individual rankings of the top three fencers. Each match consists of 45 scores (9 relays × 5 scores, 3 minutes per relay).</BulletRow>
+              {/* <BulletRow><strong>Team Events:</strong> Each team consists of 3–4 fencers. Rankings determined by the sum of individual rankings of the top three fencers. Each match consists of 45 scores (9 relays × 5 scores, 3 minutes per relay).</BulletRow> */}
             </ul>
           </div>
         </section>
@@ -701,12 +718,21 @@ const DEADLINE = useMemo(
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0 1.8rem' }}>
                 {/* Full Name */}
                 <div style={fieldStyle}>
-                  <label style={labelStyle}>Full Name *</label>
-                  <input required type="text" value={form.name} onChange={set('name')} placeholder="As per records" style={inputStyle}
-                    onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,.7)'}
-                    onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,.22)'}
-                  />
-                </div>
+  <label style={labelStyle}>Student Full Name *</label>
+  <input required type="text" value={form.name} onChange={set('name')} placeholder="As per records" style={inputStyle}
+    onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,.7)'}
+    onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,.22)'}
+  />
+</div>
+
+{/* Parent Full Name — ADD THIS AFTER STUDENT NAME */}
+<div style={fieldStyle}>
+  <label style={labelStyle}>Parent / Guardian Full Name *</label>
+  <input required type="text" value={form.parentName} onChange={set('parentName')} placeholder="As per records" style={inputStyle}
+    onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,.7)'}
+    onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,.22)'}
+  />
+</div>
 
                 {/* Email */}
                 <div style={fieldStyle}>
@@ -744,7 +770,7 @@ const DEADLINE = useMemo(
                       onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,.22)'}
                     >
                       <option value="" disabled>Select category</option>
-                      {['Open', 'Senior Team', 'U19', 'U16', 'U14', 'U12', 'U10', 'U8'].map(c => (
+                      {['U10', 'U12', 'U14', 'U16'].map(c => (
                         <option key={c} value={c} style={{ background: '#0E1116' }}>{c}</option>
                       ))}
                     </select>
@@ -797,11 +823,143 @@ const DEADLINE = useMemo(
               </div>
 
               {/* Team name (full width) */}
-              <div style={fieldStyle}>
+              {/* <div style={fieldStyle}>
                 <label style={labelStyle}>Team Name <span style={{ color: 'rgba(245,240,232,.4)', fontSize: '0.5rem' }}>(if registering for team event)</span></label>
                 <input type="text" value={form.team} onChange={set('team')} placeholder="Leave blank for individual entry only" style={inputStyle}
                   onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,.7)'}
                   onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,.22)'}
+                />
+              </div> */}
+
+              {/* ── COMMUNICATION ADDRESS ── */}
+              <div style={{
+                margin: '2rem 0 0.5rem',
+                paddingBottom: '0.6rem',
+                borderBottom: '1px solid rgba(201,168,76,.18)',
+              }}>
+                <p style={{ fontFamily: "'Cinzel', serif", fontSize: '0.58rem', letterSpacing: '0.22em', color: '#C9A84C' }}>
+                  COMMUNICATION ADDRESS
+                </p>
+              </div>
+
+              {/* Street Address */}
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Street Address *</label>
+                <input required type="text" value={form.street1} onChange={set('street1')} placeholder="Street Address" style={inputStyle}
+                  onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,.7)'}
+                  onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,.22)'}
+                />
+              </div>
+
+              {/* Street Address Line 2 */}
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Street Address Line 2</label>
+                <input type="text" value={form.street2} onChange={set('street2')} placeholder="Apartment, suite, landmark…" style={inputStyle}
+                  onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,.7)'}
+                  onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,.22)'}
+                />
+              </div>
+
+              {/* City + State */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0 1.8rem' }}>
+                <div style={fieldStyle}>
+                  <label style={labelStyle}>City *</label>
+                  <input required type="text" value={form.city} onChange={set('city')} placeholder="City" style={inputStyle}
+                    onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,.7)'}
+                    onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,.22)'}
+                  />
+                </div>
+                <div style={fieldStyle}>
+                  <label style={labelStyle}>Region / State / Province *</label>
+                  <input required type="text" value={form.state} onChange={set('state')} placeholder="State" style={inputStyle}
+                    onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,.7)'}
+                    onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,.22)'}
+                  />
+                </div>
+              </div>
+
+              {/* Pin Code + Country */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0 1.8rem' }}>
+                <div style={fieldStyle}>
+                  <label style={labelStyle}>Pin Code *</label>
+                  <input required type="text" value={form.pin} onChange={set('pin')} placeholder="Postal / ZIP code" style={inputStyle}
+                    onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,.7)'}
+                    onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,.22)'}
+                  />
+                </div>
+                <div style={fieldStyle}>
+                  <label style={labelStyle}>Country *</label>
+                  <div style={{ position: 'relative' }}>
+                    <select required value={form.country} onChange={set('country')} style={{ ...inputStyle, cursor: 'pointer' }}
+                      onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,.7)'}
+                      onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,.22)'}
+                    >
+                      <option value="" disabled>Country</option>
+                      <option value="India" style={{ background: '#0E1116' }}>India</option>
+                      <option value="Other" style={{ background: '#0E1116' }}>Other</option>
+                    </select>
+                    <span style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#C9A84C', pointerEvents: 'none' }}>▾</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* ── AADHAAR UPLOAD ── */}
+              <div style={{
+                margin: '2rem 0 0.5rem',
+                paddingBottom: '0.6rem',
+                borderBottom: '1px solid rgba(201,168,76,.18)',
+              }}>
+                <p style={{ fontFamily: "'Cinzel', serif", fontSize: '0.58rem', letterSpacing: '0.22em', color: '#C9A84C' }}>
+                  IDENTITY DOCUMENT
+                </p>
+              </div>
+
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Aadhaar Card *</label>
+                <label
+                  htmlFor="aadhaar-upload"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    border: '1px dashed rgba(201,168,76,.35)',
+                    padding: '1.2rem 1.5rem',
+                    cursor: 'pointer',
+                    background: 'rgba(201,168,76,.03)',
+                    transition: 'border-color 0.2s, background 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(201,168,76,.7)';
+                    (e.currentTarget as HTMLElement).style.background = 'rgba(201,168,76,.07)';
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(201,168,76,.35)';
+                    (e.currentTarget as HTMLElement).style.background = 'rgba(201,168,76,.03)';
+                  }}
+                >
+                  <span style={{ fontSize: '1.6rem', color: '#C9A84C' }}>⬆</span>
+                  <div>
+                    <p style={{ fontFamily: "'Cinzel', serif", fontSize: '0.6rem', letterSpacing: '0.15em', color: '#C9A84C', marginBottom: '0.2rem' }}>
+                      {form.aadhaarFile ? form.aadhaarFile.name : 'CLICK TO UPLOAD'}
+                    </p>
+                    <p style={{ fontFamily: "'Crimson Pro', serif", fontSize: '0.8rem', color: 'rgba(245,240,232,.4)' }}>
+                      {form.aadhaarFile ? `${(form.aadhaarFile.size / 1024).toFixed(0)} KB` : 'PDF, JPG or PNG · max 5 MB'}
+                    </p>
+                  </div>
+                  {form.aadhaarFile && (
+                    <span style={{ marginLeft: 'auto', color: '#C9A84C', fontSize: '1.1rem' }}>✓</span>
+                  )}
+                </label>
+                <input
+                  id="aadhaar-upload"
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  required
+                  style={{ display: 'none' }}
+                  onChange={e => {
+                    const file = e.target.files?.[0] ?? null;
+                    setForm(f => ({ ...f, aadhaarFile: file }));
+                  }}
                 />
               </div>
 

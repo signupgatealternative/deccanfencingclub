@@ -1,3 +1,16 @@
+const linkStyle = {
+  fontSize: '0.9rem',
+  fontWeight: 300,
+  color: '#6A6560',
+  textDecoration: 'none',
+  transition: 'color 0.2s, padding-left 0.2s',
+};
+
+const handleHover = (e: any, enter: boolean) => {
+  e.currentTarget.style.color = enter ? '#C9A84C' : '#6A6560';
+  e.currentTarget.style.paddingLeft = enter ? '6px' : '0px';
+};
+
 export default function Footer() {
   return (
     <footer
@@ -66,22 +79,28 @@ export default function Footer() {
               gap: '0.7rem',
             }}
           >
-            {['About', 'Events', 'Training', 'Schedule', 'Register'].map((item, i) => (
-              <li key={i}>
-                <a
-                  href={`#${item === 'Events' ? 'tournament' : item === 'Training' ? 'training-outer' : item.toLowerCase()}`}
-                  style={{
-                    fontSize: '0.9rem',
-                    fontWeight: 300,
-                    color: '#6A6560',
-                    textDecoration: 'none',
-                    transition: 'color 0.2s, padding-left 0.2s',
-                  }}
-                >
-                  {item === 'Events' ? 'Tournament' : item}
-                </a>
-              </li>
-            ))}
+           {[
+  { label: 'About', path: '/about-us' },
+  { label: 'What is Fencing', path: '/what-is-fencing' },
+  { label: 'Faq', path: '/faq' },
+  { label: 'Contact', path: '/contact' },
+  { label: 'Register Now', path: '/eventregistration' },
+].map((item, i) => (
+  <li key={i}>
+    <a
+      href={item.path}
+      style={{
+        fontSize: '0.9rem',
+        fontWeight: 300,
+        color: '#6A6560',
+        textDecoration: 'none',
+        transition: 'color 0.2s, padding-left 0.2s',
+      }}
+    >
+      {item.label}
+    </a>
+  </li>
+))}
           </ul>
         </div>
 
@@ -110,7 +129,7 @@ export default function Footer() {
           >
             <li>
               <a
-                href="mailto:info@deccanfencing.in"
+                href="mailto:deccanfencingclub@gmail.com"
                 style={{
                   fontSize: '0.9rem',
                   fontWeight: 300,
@@ -119,7 +138,7 @@ export default function Footer() {
                   transition: 'color 0.2s, padding-left 0.2s',
                 }}
               >
-                info@deccanfencing.in
+                deccanfencingclub@gmail.com
               </a>
             </li>
             <li>
@@ -133,7 +152,7 @@ export default function Footer() {
                   transition: 'color 0.2s, padding-left 0.2s',
                 }}
               >
-                +91 40 1234 5678
+                +91 89858 67456
               </a>
             </li>
             <li>
@@ -147,10 +166,10 @@ export default function Footer() {
                   transition: 'color 0.2s, padding-left 0.2s',
                 }}
               >
-                Gachibowli Indoor Stadium
+               The Peak Pride, 602, D.No 257/91/134/1, beside Walking Street Drive in, Madhapur, Hyderabad, Telangana, India. Pin Code: 500081
               </a>
             </li>
-            <li>
+            {/* <li>
               <a
                 href="#"
                 style={{
@@ -163,91 +182,123 @@ export default function Footer() {
               >
                 Hyderabad 500032
               </a>
-            </li>
+            </li> */}
           </ul>
         </div>
 
-        <div>
-          <div
-            className="ft-ct"
-            style={{
-              fontFamily: "'Cinzel',serif",
-              fontSize: '0.54rem',
-              letterSpacing: '0.28em',
-              textTransform: 'uppercase',
-              color: '#C9A84C',
-              marginBottom: '1.2rem',
-            }}
-          >
-            Affiliations
-          </div>
-          <ul
-            className="ft-links"
-            style={{
-              listStyle: 'none',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.7rem',
-            }}
-          >
-            <li>
-              <a
-                href="#"
-                style={{
-                  fontSize: '0.9rem',
-                  fontWeight: 300,
-                  color: '#6A6560',
-                  textDecoration: 'none',
-                  transition: 'color 0.2s, padding-left 0.2s',
-                }}
-              >
-                Fencing Association of India
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                style={{
-                  fontSize: '0.9rem',
-                  fontWeight: 300,
-                  color: '#6A6560',
-                  textDecoration: 'none',
-                  transition: 'color 0.2s, padding-left 0.2s',
-                }}
-              >
-                Telangana Fencing Assoc.
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                style={{
-                  fontSize: '0.9rem',
-                  fontWeight: 300,
-                  color: '#6A6560',
-                  textDecoration: 'none',
-                  transition: 'color 0.2s, padding-left 0.2s',
-                }}
-              >
-                FIE — Int. Fencing Federation
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                style={{
-                  fontSize: '0.9rem',
-                  fontWeight: 300,
-                  color: '#6A6560',
-                  textDecoration: 'none',
-                  transition: 'color 0.2s, padding-left 0.2s',
-                }}
-              >
-                Sports Auth. of Telangana
-              </a>
-            </li>
-          </ul>
-        </div>
+       <div>
+  <div
+    className="ft-ct"
+    style={{
+      fontFamily: "'Cinzel',serif",
+      fontSize: '0.54rem',
+      letterSpacing: '0.28em',
+      textTransform: 'uppercase',
+      color: '#C9A84C',
+      marginBottom: '1.2rem',
+    }}
+  >
+    Links
+  </div>
+
+  <ul
+    className="ft-links"
+    style={{
+      listStyle: 'none',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.7rem',
+    }}
+  >
+    {/* Legal Pages */}
+    <li>
+      <a
+        href="/privacy-policy"
+        style={linkStyle}
+        onMouseEnter={(e) => handleHover(e, true)}
+        onMouseLeave={(e) => handleHover(e, false)}
+      >
+        Privacy Policy
+      </a>
+    </li>
+
+    <li>
+      <a
+        href="/terms-and-conditions"
+        style={linkStyle}
+        onMouseEnter={(e) => handleHover(e, true)}
+        onMouseLeave={(e) => handleHover(e, false)}
+      >
+        Terms & Conditions
+      </a>
+    </li>
+
+    <li>
+      <a
+        href="/cookie-policy"
+        style={linkStyle}
+        onMouseEnter={(e) => handleHover(e, true)}
+        onMouseLeave={(e) => handleHover(e, false)}
+      >
+        Cookie Policy
+      </a>
+    </li>
+
+    <li>
+      <a
+        href="/disclaimer"
+        style={linkStyle}
+        onMouseEnter={(e) => handleHover(e, true)}
+        onMouseLeave={(e) => handleHover(e, false)}
+      >
+        Disclaimer
+      </a>
+    </li>
+
+    {/* Divider */}
+    <li style={{ margin: '0.8rem 0', opacity: 0.3 }}>—</li>
+
+    {/* Social Links */}
+    <li>
+      <a
+        href="https://www.facebook.com/people/Deccan-Fencing-Club/61554942851751/?mibextid=JRoKGi"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={linkStyle}
+        onMouseEnter={(e) => handleHover(e, true)}
+        onMouseLeave={(e) => handleHover(e, false)}
+      >
+        Facebook
+      </a>
+    </li>
+
+    <li>
+      <a
+        href="https://www.instagram.com/deccanfencingclub"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={linkStyle}
+        onMouseEnter={(e) => handleHover(e, true)}
+        onMouseLeave={(e) => handleHover(e, false)}
+      >
+        Instagram
+      </a>
+    </li>
+
+    <li>
+      <a
+        href="https://api.whatsapp.com/send/?phone=918985867456&text&type=phone_number&app_absent=0"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={linkStyle}
+        onMouseEnter={(e) => handleHover(e, true)}
+        onMouseLeave={(e) => handleHover(e, false)}
+      >
+        WhatsApp
+      </a>
+    </li>
+  </ul>
+</div>
       </div>
 
       <div
@@ -270,7 +321,7 @@ export default function Footer() {
             color: '#6A6560',
           }}
         >
-          © 2025 Deccan Fencing Club · All Rights Reserved
+          © 2026 Deccan Fencing Club · All Rights Reserved
         </span>
         <span style={{ fontSize: '1.3rem' }}>🇮🇳</span>
       </div>
