@@ -369,7 +369,7 @@ export async function POST(req: NextRequest) {
 
     // ─── UPI QR ───
     const upiId   = '7671066509@hdfc';
-    const amount  = '100';
+    const amount  = '1000';
     const nameUPI = 'Deccan Fencing Club';
 
     const upiLink  = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(nameUPI)}&am=${amount}&cu=INR`;
