@@ -18,6 +18,7 @@ export default function Contact() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
 /*   useEffect(() => {
     const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -84,15 +85,27 @@ export default function Contact() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setLoading(true);
+
+  const res = await fetch('/api/contact', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData),
+  });
+
+  const data = await res.json();
+
+  setLoading(false);
+
+  if (data.success) {
     setSubmitted(true);
-    setTimeout(() => {
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-      setSubmitted(false);
-    }, 3000);
-  };
+    setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+  } else {
+    alert('Something went wrong');
+  }
+};
 
   return (
     <main style={{ background: '#07080A', color: '#F5F0E8' }}>
@@ -181,16 +194,15 @@ export default function Contact() {
                 >
                   {info.title}
                 </h3>
-                <p
-                  style={{
-                    fontFamily: "'Crimson Pro', serif",
-                    fontSize: '1rem',
-                    color: 'rgba(245, 240, 232, 0.7)',
-                    margin: 0,
-                  }}
-                >
-                  {info.content}
-                </p>
+               <div
+  style={{
+    fontFamily: "'Crimson Pro', serif",
+    fontSize: '1rem',
+    color: 'rgba(245, 240, 232, 0.7)',
+  }}
+>
+  {info.content}
+</div>
               </div>
             ))}
           </div>
@@ -414,31 +426,45 @@ export default function Contact() {
               </div>
 
               <button
-                type="submit"
-                style={{
-                  fontFamily: "'Cinzel', serif",
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  background: '#C9A84C',
-                  color: '#07080A',
-                  border: 'none',
-                  padding: '1rem 3rem',
-                  cursor: 'pointer',
-                  transition: 'opacity 0.2s',
-                  borderRadius: '4px',
-                  width: '100%',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.opacity = '0.85';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.opacity = '1';
-                }}
-              >
-                Send Message
-              </button>
+  type="submit"
+  disabled={loading}
+  style={{
+    fontFamily: "'Cinzel', serif",
+    fontSize: '0.8rem',
+    fontWeight: 700,
+    letterSpacing: '0.15em',
+    textTransform: 'uppercase',
+    background: loading ? '#999' : '#C9A84C',
+    color: '#07080A',
+    border: 'none',
+    padding: '1rem 3rem',
+    cursor: loading ? 'not-allowed' : 'pointer',
+    borderRadius: '4px',
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+  }}
+>
+  {loading ? (
+    <>
+      <span
+        style={{
+          width: '16px',
+          height: '16px',
+          border: '2px solid #07080A',
+          borderTop: '2px solid transparent',
+          borderRadius: '50%',
+          animation: 'spin 0.6s linear infinite',
+        }}
+      />
+      Sending...
+    </>
+  ) : (
+    'Send Message'
+  )}
+</button>
             </form>
           )}
         </div>

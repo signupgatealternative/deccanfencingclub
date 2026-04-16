@@ -41,7 +41,7 @@ export default function Footer() {
               display: 'block',
             }}
           >
-            ⚔ Deccan Fencing Club
+            🤺 Deccan Fencing Club
           </span>
           <p
             className="ft-tag"

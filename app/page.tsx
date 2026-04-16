@@ -23,7 +23,7 @@ export default function Home() {
         switches the fencer to position:absolute (Phase 2 — pinned
         inside About), the coordinates are relative to this wrapper.
       */}
-      <div id="fence-wrap" style={{ position: 'relative' }}>
+      <div id="fence-wrap" style={{ position: 'relative',minHeight: '200vh', }}>
         <Hero />
         <Marquee />
         <About />

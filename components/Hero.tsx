@@ -17,6 +17,7 @@ interface Particle {
 
 export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  let pinST: ScrollTrigger | null = null;
 
   /* ─────────────────────────────────────────────────
      Canvas — falling light streaks + floating motes
@@ -252,15 +253,31 @@ export default function Hero() {
             gsap.to(fencer, { scaleX: s, duration: 0.25, overwrite: 'auto' });
           },
           // When About top reaches viewport top → dock fencer into document flow
-          onLeave() {
+         onLeave() {
+            // Convert to absolute first
             dockInAbout();
+
+            // Kill old pin if exists
+            pinST?.kill();
+
+            // Create pin inside About
+            pinST = ScrollTrigger.create({
+              trigger: '#about',
+              start: 'top top',
+              end: 'bottom top',
+              pin: fencer,
+              pinSpacing: false,
+            });
           },
           // When scrolling back up past that point → restore fixed
-          onEnterBack() {
-            resetToFixed();
-            // Rewind travel animation to full progress
-            gsap.set(fencer, { x: deltaX, y: deltaY, scaleX: -1 });
-          },
+              onEnterBack() {
+      pinST?.kill();
+      pinST = null;
+
+      resetToFixed();
+
+      gsap.set(fencer, { x: deltaX, y: deltaY, scaleX: -1 });
+    },
         });
       });
     }
@@ -353,7 +370,7 @@ export default function Hero() {
               clipPath: 'inset(0 100% 0 0)',
             }}
           >
-            ⚔&nbsp;&nbsp;Est. Hyderabad, India&nbsp;·&nbsp;Since 2015
+            ⚔&nbsp;&nbsp;Est. Hyderabad, India&nbsp;·&nbsp;Since 2023
           </div>
 
           {/* Heading */}
