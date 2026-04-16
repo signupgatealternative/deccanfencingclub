@@ -392,13 +392,13 @@ export default function Hero() {
             }}
           >
             Deccan Fencing Club is Hyderabad&apos;s premier competitive fencing academy —
-            training champions across Foil, Épée and Sabre since 2015.
+            training champions across Foil, Épée and Sabre since 2023.
           </p>
 
           {/* CTA */}
           <div id="ha" style={{ display: 'flex', gap: '1.2rem', marginTop: 'clamp(1.6rem, 5vw, 2.8rem)', opacity: 0 }}>
             <a
-              href="#register"
+              href="/contact"
               style={{
                 background: '#C9A84C',
                 padding: 'clamp(0.7rem, 2vw, 1rem) clamp(1.4rem, 4vw, 2.5rem)',

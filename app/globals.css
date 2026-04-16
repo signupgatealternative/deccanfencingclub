@@ -143,3 +143,19 @@ body.ch #cur-ring {
     text-align: center;
   }
 }
+
+.floating-image {
+  animation: floatY 6s ease-in-out infinite;
+}
+
+@keyframes floatY {
+  0% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) scale(1.02);
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+}

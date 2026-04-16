@@ -1,20 +1,32 @@
-export default function Disclaimer() {
+import LegalLayout, { SH, bodyStyle } from "@/components/LegalLayout";
+
+export default function Page() {
   return (
-    <main style={{ background: '#07080A', color: '#F5F0E8', padding: '4rem 2rem' }}>
-      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-        <h1 style={{ color: '#C9A84C', marginBottom: '2rem' }}>Disclaimer</h1>
+    <LegalLayout
+      title="Disclaimer"
+      subtitle="Important information regarding the use of our website and services."
+    >
+      <p style={bodyStyle}>
+        The information provided by Deccan Fencing Club is for general informational
+        purposes only.
+      </p>
 
-        <p>The information provided by Deccan Fencing Club is for general informational purposes only.</p>
+      <SH>No Professional Advice</SH>
+      <p style={bodyStyle}>
+        Content on this site does not constitute professional or medical advice.
+        Participation in fencing activities is at your own risk.
+      </p>
 
-        <h2>No Professional Advice</h2>
-        <p>Training and participation are at your own risk.</p>
+      <SH>External Links</SH>
+      <p style={bodyStyle}>
+        We are not responsible for the content or policies of third-party websites.
+      </p>
 
-        <h2>External Links</h2>
-        <p>We are not responsible for third-party websites linked on our platform.</p>
-
-        <h2>Accuracy</h2>
-        <p>We strive for accuracy but do not guarantee completeness.</p>
-      </div>
-    </main>
+      <SH>Accuracy</SH>
+      <p style={bodyStyle}>
+        While we aim to keep information accurate, we do not guarantee completeness
+        or reliability.
+      </p>
+    </LegalLayout>
   );
 }

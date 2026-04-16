@@ -1,3 +1,4 @@
+import WhyChoose from "@/components/Whychoose";
 import About from "../components/About";
 import Banner from "../components/Banner";
 import Hero from "../components/Hero";
@@ -6,6 +7,8 @@ import Marquee from "../components/Marquee";
 // import Schedule from "../components/Schedule";
 import Tournament from "../components/Tournament";
 import Training from "../components/Training";
+import ProgramsAndNews from "@/components/Programsandnews";
+import ForParents from "@/components/Forparents";
 
 
 export default function Home() {
@@ -50,8 +53,11 @@ export default function Home() {
       </div>
 
       <Banner />
-      <Tournament />
+      {/* <Tournament /> */}
       <Training />
+      <WhyChoose />
+      <ProgramsAndNews />
+      <ForParents />
       {/* <Schedule /> */}
       {/* <Register /> */}
       {/* <Footer /> */}

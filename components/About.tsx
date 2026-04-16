@@ -134,7 +134,7 @@ export default function About() {
               color: 'rgba(245,240,232,.62)',
               marginTop: '1.5rem',
             }}>
-              Founded in 2015, Deccan Fencing Club was born from a vision to bring
+              Founded in 2023, Deccan Fencing Club was born from a vision to bring
               world-class fencing to the heart of Telangana. Rooted in the warrior
               heritage of the Deccan plateau, we nurture athletes from grassroots to
               national podium.

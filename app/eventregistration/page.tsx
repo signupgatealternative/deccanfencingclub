@@ -379,7 +379,7 @@ const DEADLINE = useMemo(
             color: '#F5F0E8',
           }}>
             ⚠ Registration closes&nbsp;
-            <span style={{ color: '#C9A84C', fontWeight: 700 }}>6 June 2026</span>
+            <span style={{ color: '#C9A84C', fontWeight: 700 }}>17 May 2026</span>
             &nbsp;— {dl.d}d {pad(dl.h)}h {pad(dl.m)}m remaining
           </div>
 
@@ -536,7 +536,7 @@ const DEADLINE = useMemo(
           <Td>
             <strong style={{ color: '#C9A84C' }}>Online Entry</strong><br />
             <span style={{ fontSize: '0.82rem', color: 'rgba(245,240,232,.5)' }}>
-              Before 6 June 2026
+              Before 17 May 2026
             </span>
           </Td>
           <Td style={{ textAlign: 'center', fontFamily: "'Cinzel Decorative', serif", color: '#C9A84C', fontSize: '1.3rem' }}>
@@ -1032,7 +1032,7 @@ const DEADLINE = useMemo(
           letterSpacing: '0.3em',
           color: 'rgba(201,168,76,.3)',
         }}>
-          ⚔ &nbsp; DECCAN FENCING CLUB &nbsp;·&nbsp; EST. HYDERABAD &nbsp;·&nbsp; SINCE 2024
+          ⚔ &nbsp; DECCAN FENCING CLUB &nbsp;·&nbsp; EST. HYDERABAD &nbsp;·&nbsp; SINCE 2023
         </div>
 
       </main>

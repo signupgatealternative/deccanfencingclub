@@ -1,5 +1,5 @@
 export default function Marquee() {
-  const items = ['Foil', 'Épée', 'Sabre', 'Deccan Open 2025', 'Hyderabad', 'Junior Champions', 'National Excellence'];
+  const items = ['Foil', 'Épée', 'Sabre', 'Deccan Open 2026', 'Hyderabad', 'Junior Champions', 'National Excellence'];
 
   return (
     <div

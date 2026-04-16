@@ -1,24 +1,33 @@
-export default function CookiePolicy() {
+import LegalLayout, { SH, bodyStyle, BulletList } from "@/components/LegalLayout";
+
+export default function Page() {
   return (
-    <main style={{ background: '#07080A', color: '#F5F0E8', padding: '4rem 2rem' }}>
-      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-        <h1 style={{ color: '#C9A84C', marginBottom: '2rem' }}>Cookie Policy</h1>
+    <LegalLayout
+      title="Cookie Policy"
+      subtitle="Understanding how we use cookies on our website."
+    >
+      <p style={bodyStyle}>
+        This Cookie Policy explains how Deccan Fencing Club uses cookies to enhance
+        your browsing experience.
+      </p>
 
-        <p>We use cookies to enhance your browsing experience.</p>
+      <SH>What Are Cookies?</SH>
+      <p style={bodyStyle}>
+        Cookies are small text files stored on your device when you visit a website.
+      </p>
 
-        <h2>What Are Cookies?</h2>
-        <p>Cookies are small files stored on your device.</p>
+      <SH>How We Use Cookies</SH>
+      <BulletList items={[
+        "Ensure website functionality",
+        "Analyze visitor behavior",
+        "Improve user experience",
+      ]} />
 
-        <h2>How We Use Cookies</h2>
-        <ul>
-          <li>Website functionality</li>
-          <li>Analytics</li>
-          <li>User experience improvement</li>
-        </ul>
-
-        <h2>Managing Cookies</h2>
-        <p>You can disable cookies through your browser settings.</p>
-      </div>
-    </main>
+      <SH>Managing Cookies</SH>
+      <p style={bodyStyle}>
+        You can disable cookies through your browser settings. However, some features
+        of the website may not function properly.
+      </p>
+    </LegalLayout>
   );
 }

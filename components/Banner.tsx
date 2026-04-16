@@ -57,12 +57,12 @@ export default function Banner() {
             className="b-day"
             style={{
               fontFamily: "'Cinzel Decorative',serif",
-              fontSize: '4.5rem',
+              fontSize: '3.5rem',
               fontWeight: 900,
               lineHeight: 1,
             }}
           >
-            12
+            6-7
           </span>
           <span
             className="b-mon"
@@ -75,7 +75,7 @@ export default function Banner() {
               textTransform: 'uppercase',
             }}
           >
-            July
+            June
           </span>
           <span style={{ fontFamily: "'Cinzel',serif", fontSize: '0.6rem', letterSpacing: '0.2em', opacity: 0.6, marginTop: '0.2rem' }}>2025</span>
         </div>
@@ -113,7 +113,7 @@ export default function Banner() {
               color: '#F5F0E8',
             }}
           >
-            Deccan Open Fencing Championship 2025
+            Deccan Open Fencing Championship 2026
           </h2>
           <div
             className="b-meta"
@@ -126,9 +126,9 @@ export default function Banner() {
               gap: '0.4rem',
             }}
           >
-            <span>📍 Gachibowli Indoor Stadium, Hyderabad</span>
-            <span>🏅 Foil · Épée · Sabre — U12 / U14 / U17 / U20 / Senior</span>
-            <span>🗓 12–13 July 2025 · Registration closes 30 June</span>
+            <span>📍 Kotla Vijaya Bhaskar Reddy Indoor Stadium, Yousufguda, Hyderabad,India</span>
+            <span>🏅 Foil · Épée · Sabre — U10 / U12 / U14 / U16</span>
+            <span>6–7 June 26 Registration closes 17 May</span>
           </div>
         </div>
 

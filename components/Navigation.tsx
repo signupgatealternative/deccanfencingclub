@@ -154,13 +154,17 @@ useEffect(() => {
     whiteSpace: "nowrap",
   }}
 >
+<div style={{ width: "clamp(140px, 20vw, 180px)", height: 60, position: "relative" }}>
   <Image
-    src="/images/logo-dfc.jpeg"   // put your logo in /public folder
+    src="/images/logo-dfc.jpeg"
     alt="Deccan Fencing Club Logo"
-    width={250}
-    height={28}
-    style={{ objectFit: "contain" }}
+    fill
+    sizes="(max-width: 768px) 140px, 180px"
+    style={{
+      objectFit: "contain",
+    }}
   />
+</div>
 
   {/* DECCAN FENCING CLUB */}
 </Link>

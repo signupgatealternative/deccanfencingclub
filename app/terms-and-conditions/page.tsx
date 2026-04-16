@@ -1,23 +1,46 @@
-export default function TermsAndConditions() {
+import LegalLayout, { SH, bodyStyle, BulletList } from "@/components/LegalLayout";
+
+export default function Page() {
   return (
-    <main style={{ background: '#07080A', color: '#F5F0E8', padding: '4rem 2rem' }}>
-      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-        <h1 style={{ color: '#C9A84C', marginBottom: '2rem' }}>Terms & Conditions</h1>
+    <LegalLayout
+      title="Terms & Conditions"
+      subtitle="Please read these terms carefully before using our services."
+    >
+      <p style={bodyStyle}>
+        By accessing our website or participating in Deccan Fencing Club activities,
+        you agree to comply with these terms and conditions.
+      </p>
 
-        <p>By accessing Deccan Fencing Club services, you agree to the following terms.</p>
+      <SH>Use of Website</SH>
+      <p style={bodyStyle}>
+        All content is for informational purposes only. Unauthorized use or copying
+        of materials is strictly prohibited.
+      </p>
 
-        <h2>Usage</h2>
-        <p>All content is for informational purposes only. Unauthorized use is prohibited.</p>
+      <SH>Registrations</SH>
+      <BulletList items={[
+        "All information must be accurate and complete",
+        "Fees are non-refundable unless cancelled by the club",
+        "Participants must follow event rules and guidelines",
+      ]} />
 
-        <h2>Registrations</h2>
-        <p>Users must provide accurate information during registration.</p>
+      <SH>Code of Conduct</SH>
+      <p style={bodyStyle}>
+        Participants are expected to maintain discipline, respect coaches and fellow
+        fencers, and follow all safety guidelines.
+      </p>
 
-        <h2>Liability</h2>
-        <p>We are not responsible for injuries or damages arising from participation.</p>
+      <SH>Liability</SH>
+      <p style={bodyStyle}>
+        Fencing is a physical sport. The club is not responsible for injuries,
+        damages, or losses during training or competitions.
+      </p>
 
-        <h2>Changes</h2>
-        <p>We may update these terms at any time.</p>
-      </div>
-    </main>
+      <SH>Changes to Terms</SH>
+      <p style={bodyStyle}>
+        We may update these terms at any time. Continued use of our services
+        constitutes acceptance of the updated terms.
+      </p>
+    </LegalLayout>
   );
 }
